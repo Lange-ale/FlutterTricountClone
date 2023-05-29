@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:balance/db/wallets_database.dart';
-import 'package:balance/model/wallet.dart';
+import 'package:tricount/db/wallets_database.dart';
+import 'package:tricount/model/wallet.dart';
 
 class AddEditWalletPage extends StatefulWidget {
   final Wallet? wallet;

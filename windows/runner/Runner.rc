@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "balance" "\0"
+            VALUE "FileDescription", "tricount" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "balance" "\0"
+            VALUE "InternalName", "tricount" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "balance.exe" "\0"
-            VALUE "ProductName", "balance" "\0"
+            VALUE "OriginalFilename", "tricount.exe" "\0"
+            VALUE "ProductName", "tricount" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

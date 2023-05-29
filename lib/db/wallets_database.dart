@@ -1,9 +1,9 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:balance/model/wallet.dart';
-import 'package:balance/model/balance.dart';
-import 'package:balance/model/person.dart';
+import 'package:tricount/model/wallet.dart';
+import 'package:tricount/model/balance.dart';
+import 'package:tricount/model/person.dart';
 
 class WalletsDatabase {
   static const String databaseName = 'walletsDatabase.db';

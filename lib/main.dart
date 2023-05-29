@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:balance/pages/wallets_page.dart';
+import 'package:tricount/pages/all_wallets_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,4 +1,4 @@
-package com.example.balance
+package com.example.tricount
 
 import io.flutter.embedding.android.FlutterActivity
 

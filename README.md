@@ -1,4 +1,4 @@
-# balance
+# Tricount clone with Flutter
 
 A new Flutter project.
 
