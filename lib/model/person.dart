@@ -2,34 +2,33 @@ class Person {
   static const String tableName = 'person';
   static const String columnId = 'id';
   static const String columnName = 'name';
-  
+  static const String columnWalletId = 'walletId';
 
   final int? id;
-  String name;
+  final String name;
+  final int walletId;
 
   Person({
     this.id,
     required this.name,
+    required this.walletId,
   });
 
-  Map<String, dynamic> toMap() {
-    if (id == null) {
-      return {
-        columnName: name,
-      };
-    } else {
-      return {
-        columnId: id,
-        columnName: name,
-      };
-    }
-  }
+  Person.fromMap(Map<String, dynamic> map)
+      : id = map[columnId],
+        name = map[columnName],
+        walletId = map[columnWalletId];
 
-  static Person fromMap(Map<String, dynamic> map) {
-    return Person(
-      id: map[columnId],
-      name: map[columnName],
-    );
+
+  Map<String, dynamic> toMap() {
+    var toReturn = {
+      columnName: name,
+      columnWalletId: walletId,
+    };
+    if (id != null) {
+      toReturn.putIfAbsent(columnId, () => id!);
+    }
+    return toReturn;
   }
 
   @override

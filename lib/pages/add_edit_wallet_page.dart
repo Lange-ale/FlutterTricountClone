@@ -62,14 +62,12 @@ class AddEditWalletPageState extends State<AddEditWalletPage> {
         onPressed: () async {
           final form = _formKey.currentState!;
           if (form.validate()) {
-            final wallet = Wallet(
-              name: _name,
-            );
             if (widget.wallet == null) {
-              await WalletsDatabase.instance.insertWallet(wallet);
+              await WalletsDatabase.instance.insertWallet(Wallet( name: _name,));
             } else {
-              wallet.id = widget.wallet!.id;
-              await WalletsDatabase.instance.updateWallet(wallet);
+              await WalletsDatabase.instance.updateWallet(
+                widget.wallet!.copyWith(name: _name),
+              );
             }
             Navigator.of(context).pop();
           }

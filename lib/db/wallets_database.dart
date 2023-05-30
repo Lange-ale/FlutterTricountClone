@@ -2,8 +2,9 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:tricount/model/wallet.dart';
-import 'package:tricount/model/balance.dart';
 import 'package:tricount/model/person.dart';
+import 'package:tricount/model/transiction.dart';
+import 'package:tricount/model/debt.dart';
 
 class WalletsDatabase {
   static const String databaseName = 'walletsDatabase.db';
@@ -32,27 +33,80 @@ class WalletsDatabase {
     await db.execute('''
       CREATE TABLE ${Wallet.tableName} (
         ${Wallet.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Wallet.columnName} VARCHAR(255) NOT NULL
+        ${Wallet.columnName} TEXT NOT NULL
       )
-    ''');
+     ''');
     await db.execute('''
       CREATE TABLE ${Person.tableName} (
         ${Person.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Person.columnName} TEXT NOT NULL
+        ${Person.columnName} TEXT NOT NULL,
+        ${Person.columnWalletId} INTEGER NOT NULL,
+        FOREIGN KEY (${Person.columnWalletId}) 
+          REFERENCES ${Wallet.tableName} (${Wallet.columnId}) 
+          ON DELETE CASCADE
       )
     ''');
     await db.execute('''
-      CREATE TABLE ${Balance.tableName} (
-        ${Balance.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Balance.columnPersonId} INTEGER NOT NULL,
-        ${Balance.columnWalletId} INTEGER NOT NULL,
-        ${Balance.columnAmount} REAL NOT NULL,
-        FOREIGN KEY (${Balance.columnPersonId}) 
-          REFERENCES ${Person.tableName} (${Person.columnId}),
-        FOREIGN KEY (${Balance.columnWalletId}) 
-          REFERENCES ${Wallet.tableName} (${Wallet.columnId})
+      CREATE TABLE ${Transiction.tableName} (
+        ${Transiction.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Transiction.columnPersonId} INTEGER NOT NULL,
+        ${Transiction.columnTotalAmount} REAL NOT NULL,
+        ${Transiction.columnDate} TEXT NOT NULL,
+        FOREIGN KEY (${Transiction.columnPersonId}) 
+          REFERENCES ${Person.tableName} (${Person.columnId}) 
+          ON DELETE CASCADE
       )
     ''');
+    await db.execute('''
+      CREATE TABLE ${Debt.tableName} (
+        ${Debt.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Debt.columnPersonId} INTEGER NOT NULL,
+        ${Debt.columnTransictionId} INTEGER NOT NULL,
+        ${Debt.columnAmount} REAL NOT NULL,
+        FOREIGN KEY (${Debt.columnPersonId}) 
+          REFERENCES ${Person.tableName} (${Person.columnId}) 
+          ON DELETE CASCADE,
+        FOREIGN KEY (${Debt.columnTransictionId}) 
+          REFERENCES ${Transiction.tableName} (${Transiction.columnId}) 
+          ON DELETE CASCADE
+      )
+    ''');
+
+    //TODO: REMOVE THIS
+    await db.insert(Wallet.tableName, Wallet(id: 1, name: 'Wallet 1').toMap());
+    await db.insert(
+        Person.tableName, Person(id: 1, name: 'Person 1', walletId: 1).toMap());
+    await db.insert(
+        Person.tableName, Person(id: 2, name: 'Person 2', walletId: 1).toMap());
+    await db.insert(
+        Person.tableName, Person(id: 3, name: 'Person 3', walletId: 1).toMap());
+    await db.insert(Transiction.tableName,
+        Transiction(id: 1, personId: 1, totalAmount: 150, date: DateTime.now(), description: 'Transiction 1').toMap());
+    await db.insert(Debt.tableName,
+        Debt(id: 1, personId: 1, transictionId: 1, amount: -100).toMap());
+    await db.insert(Debt.tableName,
+        Debt(id: 2, personId: 2, transictionId: 1, amount: 50).toMap());
+    await db.insert(Debt.tableName,
+        Debt(id: 3, personId: 3, transictionId: 1, amount: 50).toMap());
+    await db.insert(
+        Transiction.tableName,
+        Transiction(
+                id: 2,
+                personId: 1,
+                totalAmount: 150,
+                date: DateTime.now(),
+                description: 'Transiction 2')
+            .toMap());
+    await db.insert(Debt.tableName,
+        Debt(id: 3, personId: 1, transictionId: 2, amount: -100).toMap());
+    await db.insert(Debt.tableName,
+        Debt(id: 4, personId: 2, transictionId: 2, amount: 50).toMap());
+    await db.insert(Debt.tableName,
+        Debt(id: 5, personId: 3, transictionId: 2, amount: 50).toMap());
+    //if in the receiver there is the payer, amount = totalAmount / number of people and in the for if the receiver is the payer continue,
+    //the debt of the payer is - (totalAmount / number of people - amount)
+    //if in the receiver there is not the payer, amount = totalAmount / number of people
+    //the debt of the payer is - (totalAmount / number of people)
   }
 
   Future<List<Wallet>> getWallets() async {
@@ -63,35 +117,9 @@ class WalletsDatabase {
     });
   }
 
-  Future<List<Person>> getPeople() async {
-    Database db = await instance.database;
-    List<Map<String, dynamic>> maps = await db.query(Person.tableName);
-    return List.generate(maps.length, (index) {
-      return Person.fromMap(maps[index]);
-    });
-  }
-
-  Future<List<Balance>> getBalances() async {
-    Database db = await instance.database;
-    List<Map<String, dynamic>> maps = await db.query(Balance.tableName);
-    return List.generate(maps.length, (index) {
-      return Balance.fromMap(maps[index]);
-    });
-  }
-
   Future<void> insertWallet(Wallet wallet) async {
     Database db = await instance.database;
     await db.insert(Wallet.tableName, wallet.toMap());
-  }
-
-  Future<void> insertPerson(Person person) async {
-    Database db = await instance.database;
-    await db.insert(Person.tableName, person.toMap());
-  }
-
-  Future<void> insertBalance(Balance balance) async {
-    Database db = await instance.database;
-    await db.insert(Balance.tableName, balance.toMap());
   }
 
   Future<void> updateWallet(Wallet wallet) async {
@@ -104,50 +132,12 @@ class WalletsDatabase {
     );
   }
 
-  Future<void> updatePerson(Person person) async {
-    Database db = await instance.database;
-    await db.update(
-      Person.tableName,
-      person.toMap(),
-      where: '${Person.columnId} = ?',
-      whereArgs: [person.id],
-    );
-  }
-
-  Future<void> updateBalance(Balance balance) async {
-    Database db = await instance.database;
-    await db.update(
-      Balance.tableName,
-      balance.toMap(),
-      where: '${Balance.columnId} = ?',
-      whereArgs: [balance.id],
-    );
-  }
-
   Future<void> deleteWallet(Wallet wallet) async {
     Database db = await instance.database;
     await db.delete(
       Wallet.tableName,
       where: '${Wallet.columnId} = ?',
       whereArgs: [wallet.id],
-    );
-  }
-
-  Future<void> deletePerson(Person person) async {
-    Database db = await instance.database;
-    await db.delete(
-      Person.tableName,
-      where: '${Person.columnId} = ?',
-      whereArgs: [person.id],
-    );
-  }
-
-  Future<void> deleteBalance(Balance balance) async {
-    Database db = await instance.database;
-    await db.delete(
-      Balance.tableName,
-      where: '${Balance.columnId} = ?',
-      whereArgs: [balance.id],
     );
   }
 }
