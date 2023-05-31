@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:tricount/model/wallet.dart';
+import 'package:tricount/pages/expenses_widget.dart';
+import 'package:tricount/pages/balances_widget.dart';
 
+import 'package:tricount/model/wallet.dart';
 
 class WalletPage extends StatefulWidget {
   final Wallet wallet;
@@ -13,81 +15,33 @@ class WalletPage extends StatefulWidget {
 }
 
 class WalletPageState extends State<WalletPage> {
-  var _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.wallet.name),
-      ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: [
-          _ExpensesWidget(wallet: widget.wallet),
-          _BalancesPage(wallet: widget.wallet),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt),
-            label: 'Expenses',
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.receipt),
+                text: 'EXPENSES',
+              ),
+              Tab(
+                icon: Icon(Icons.compare_arrows),
+                text: 'BALANCES',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.compare_arrows),
-            label: 'Balances',
-          ),
-        ],
-        selectedItemColor: Colors.amber[800],
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+          title: Text(widget.wallet.name),
+        ),
+        body: TabBarView(
+          children: [
+            ExpensesWidget(wallet: widget.wallet),
+            BalancesWidget(wallet: widget.wallet),
+          ],
+        ),
       ),
-    );
-  }
-}
-
-class _ExpensesWidget extends StatefulWidget {
-  final Wallet wallet;
-
-  const _ExpensesWidget({Key? key, required this.wallet}) : super(key: key);
-
-  @override
-  _ExpensesWidgetState createState() => _ExpensesWidgetState();
-}
-
-class _ExpensesWidgetState extends State<_ExpensesWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Expenses'),
-    );
-  }
-}
-
-class _BalancesPage extends StatefulWidget {
-  final Wallet wallet;
-
-  const _BalancesPage({Key? key, required this.wallet}) : super(key: key);
-
-  @override
-  _BalancesPageState createState() => _BalancesPageState();
-}
-
-class _BalancesPageState extends State<_BalancesPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Balances'),
     );
   }
 }

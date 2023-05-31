@@ -1,5 +1,5 @@
 class Wallet {
-  static const String tableName = 'wallet';
+  static const String table = 'wallet';
   static const String columnId = 'id';
   static const String columnName = 'name';
 
@@ -15,7 +15,7 @@ class Wallet {
       : id = map[columnId],
         name = map[columnName];
 
-  Wallet copyWith({ int? id, String? name }) {
+  Wallet copyWith({int? id, String? name}) {
     return Wallet(
       id: id ?? this.id,
       name: name ?? this.name,

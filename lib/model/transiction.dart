@@ -1,5 +1,5 @@
 class Transiction {
-  static const String tableName = 'transiction';
+  static const String table = 'transiction';
   static const String columnId = 'id';
   static const String columnPersonId = 'personId';
   static const String columnTotalAmount = 'totalAmount';

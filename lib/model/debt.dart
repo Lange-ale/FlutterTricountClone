@@ -1,5 +1,5 @@
 class Debt {
-  static const String tableName = 'debt';
+  static const String table = 'debt';
   static const String columnId = 'id';
   static const String columnTransictionId = 'transictionId';
   static const String columnPersonId = 'personId';
@@ -22,7 +22,6 @@ class Debt {
         transictionId = map[columnTransictionId],
         personId = map[columnPersonId],
         amount = map[columnAmount];
-
 
   Map<String, dynamic> toMap() {
     var toReturn = {

@@ -1,5 +1,5 @@
 class Person {
-  static const String tableName = 'person';
+  static const String table = 'person';
   static const String columnId = 'id';
   static const String columnName = 'name';
   static const String columnWalletId = 'walletId';
@@ -18,7 +18,6 @@ class Person {
       : id = map[columnId],
         name = map[columnName],
         walletId = map[columnWalletId];
-
 
   Map<String, dynamic> toMap() {
     var toReturn = {
