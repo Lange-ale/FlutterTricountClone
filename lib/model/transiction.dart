@@ -7,10 +7,10 @@ class Transiction {
   static const String columnDescription = 'description';
 
   final int? id;
-  final int personId;
-  final double totalAmount;
-  final DateTime date;
-  final String description;
+  int personId;
+  double totalAmount;
+  DateTime date;
+  String description;
 
   Transiction({
     this.id,
@@ -19,6 +19,21 @@ class Transiction {
     required this.date,
     required this.description,
   });
+
+  Transiction copyWith(
+      {int? id,
+      int? personId,
+      double? totalAmount,
+      DateTime? date,
+      String? description}) {
+    return Transiction(
+      id: id ?? this.id,
+      personId: personId ?? this.personId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      date: date ?? this.date,
+      description: description ?? this.description,
+    );
+  }
 
   Transiction.fromMap(Map<String, dynamic> map)
       : id = map[columnId],

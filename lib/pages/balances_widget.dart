@@ -5,8 +5,6 @@ import 'package:tricount/model/wallet.dart';
 import 'package:tricount/model/person.dart';
 import 'package:tricount/model/transiction.dart';
 
-import 'package:fl_chart/fl_chart.dart';
-
 class BalancesWidget extends StatefulWidget {
   final Wallet wallet;
 

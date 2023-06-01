@@ -32,8 +32,7 @@ class WalletsPageState extends State<WalletsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Wallets')),
-      body: //edit the list of wallets here
-          ListView.builder(
+      body: ListView.builder(
         itemCount: WalletsPageState.wallets.length,
         itemBuilder: (BuildContext context, int index) {
           final wallet = WalletsPageState.wallets[index];
@@ -43,10 +42,8 @@ class WalletsPageState extends State<WalletsPage> {
                 child: ListTile(
                   title: Text(wallet.name),
                   onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => WalletPage(wallet: wallet))
-                    );
+                    await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => WalletPage(wallet: wallet)));
                     refreshWallets();
                   },
                 ),
@@ -54,10 +51,8 @@ class WalletsPageState extends State<WalletsPage> {
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                          builder: (context) => AddEditWalletPage(wallet: wallet))
-                  );
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddEditWalletPage(wallet: wallet)));
                   refreshWallets();
                 },
               ),

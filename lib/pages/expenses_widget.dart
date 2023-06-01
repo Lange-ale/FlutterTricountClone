@@ -6,6 +6,7 @@ import 'package:tricount/model/person.dart';
 import 'package:tricount/model/transiction.dart';
 
 import 'package:tricount/pages/transiction_page.dart';
+import 'package:tricount/pages/add_edit_transiction_page.dart';
 
 class ExpensesWidget extends StatefulWidget {
   final Wallet wallet;
@@ -70,6 +71,8 @@ class ExpensesWidgetState extends State<ExpensesWidget> {
               await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => TransictionPage(
+                    wallet: widget.wallet,
+                    people: people,
                     transiction: transictions[index],
                   ),
                 ),
@@ -77,15 +80,38 @@ class ExpensesWidgetState extends State<ExpensesWidget> {
               refreshTransictions();
             },
           );
-        },        
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          // TODO
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddEditTransictionPage(
+                people: people,
+                transiction: null,
+              ),
+            ),
+          );
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomSheet: Container(
+        height: 50,
+        color: Colors.black,
+        child: Row(
+          children: [
+            const Spacer(),
+            Text(
+              'Total: € ${100}    ',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

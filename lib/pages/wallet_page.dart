@@ -34,6 +34,9 @@ class WalletPageState extends State<WalletPage> {
             ],
           ),
           title: Text(widget.wallet.name),
+          actions: [
+            IconButton(icon: const Icon(Icons.person), onPressed: () async {}),
+          ],
         ),
         body: TabBarView(
           children: [
