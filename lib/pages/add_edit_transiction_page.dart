@@ -35,7 +35,7 @@ class AddEditTransictionPageState extends State<AddEditTransictionPage> {
           key: _formKey,
           child: Column(children: [
             TextFormField(
-              initialValue: widget.transiction?.description,
+              initialValue: widget.transiction?.description ?? '',
               decoration: const InputDecoration(
                 labelText: 'Description',
               ),
@@ -45,14 +45,11 @@ class AddEditTransictionPageState extends State<AddEditTransictionPage> {
                 }
                 return null;
               },
-              onSaved: (value) {
-                widget.transiction!.description = value!;
-              },
             ),
             TextFormField(
-              initialValue: widget.transiction?.totalAmount.toString(),
+              initialValue: widget.transiction?.totalAmount.toString() ?? '0',
               decoration: const InputDecoration(
-                labelText: 'Total amount',
+                labelText: 'Total amount (€)',
               ),
               keyboardType: TextInputType.number,
               validator: (value) {
@@ -61,25 +58,20 @@ class AddEditTransictionPageState extends State<AddEditTransictionPage> {
                 }
                 return null;
               },
-              onSaved: (value) {
-                widget.transiction?.totalAmount = double.parse(value!);
-              },
             ),
             TextFormField(
+              initialValue:
+                  widget.transiction?.date.toString().substring(0, 10) ??
+                      DateTime.now().toString().substring(0, 10),
               keyboardType: TextInputType.datetime,
               decoration: const InputDecoration(
                 labelText: 'Date',
               ),
-              initialValue:
-                  widget.transiction!.date.toString().substring(0, 10),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a date';
                 }
                 return null;
-              },
-              onSaved: (value) {
-                widget.transiction?.date = DateTime.parse(value!);
               },
             ),
           ]),
