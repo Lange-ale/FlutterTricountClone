@@ -27,7 +27,28 @@ class AddEditTransictionPageState extends State<AddEditTransictionPage> {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text(widget.transiction == null ? 'New expense' : 'Edit expense'),
+        Text(widget.transiction == null ? 'New expense' : 'Edit expense'),
+        leading: Column(
+          children: [
+            IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ),
+        actions: [
+          Column(
+            children: [
+              IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }
+              )
+            ],
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -61,8 +82,8 @@ class AddEditTransictionPageState extends State<AddEditTransictionPage> {
             ),
             TextFormField(
               initialValue:
-                  widget.transiction?.date.toString().substring(0, 10) ??
-                      DateTime.now().toString().substring(0, 10),
+              widget.transiction?.date.toString().substring(0, 10) ??
+                  DateTime.now().toString().substring(0, 10),
               keyboardType: TextInputType.datetime,
               decoration: const InputDecoration(
                 labelText: 'Date',
