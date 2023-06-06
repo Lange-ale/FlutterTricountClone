@@ -4,6 +4,7 @@ import 'package:tricount/pages/expenses_widget.dart';
 import 'package:tricount/pages/balances_widget.dart';
 
 import 'package:tricount/model/wallet.dart';
+import 'package:tricount/pages/people_page.dart';
 
 class WalletPage extends StatefulWidget {
   final Wallet wallet;
@@ -35,7 +36,12 @@ class WalletPageState extends State<WalletPage> {
           ),
           title: Text(widget.wallet.name),
           actions: [
-            IconButton(icon: const Icon(Icons.person), onPressed: () async {}),
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PeoplePage(wallet: widget.wallet)));
+              }),
           ],
         ),
         body: TabBarView(
