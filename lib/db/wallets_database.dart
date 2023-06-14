@@ -74,13 +74,13 @@ class WalletsDatabase {
     ''');
 
     //TODO: REMOVE THIS
-    await db.insert(Wallet.table, Wallet(id: 1, name: 'Wallet 1').toMap());
-    await db.insert(
-        Person.table, Person(id: 1, name: 'Person 1', walletId: 1).toMap());
-    await db.insert(
-        Person.table, Person(id: 2, name: 'Person 2', walletId: 1).toMap());
-    await db.insert(
-        Person.table, Person(id: 3, name: 'Person 3', walletId: 1).toMap());
+    for (int i = 1; i <= 10; i++) {
+      await db.insert(Wallet.table, Wallet(id: i, name: 'Wallet $i').toMap());
+    }
+    for (int i = 1; i <= 10; i++) {
+      await db.insert(
+          Person.table, Person(id: i, name: 'Person $i', walletId: 1).toMap());
+    }
     await db.insert(
         Transiction.table,
         Transiction(
@@ -154,6 +154,30 @@ class WalletsDatabase {
     return {for (var p in people) p[Person.columnId]: Person.fromMap(p)};
   }
 
+  Future<void> insertPerson(Person person) async {
+    Database db = await instance.database;
+    await db.insert(Person.table, person.toMap());
+  }
+
+  Future<void> updatePerson(Person person) async {
+    Database db = await instance.database;
+    await db.update(
+      Person.table,
+      person.toMap(),
+      where: '${Person.columnId} = ?',
+      whereArgs: [person.id],
+    );
+  }
+
+  Future<void> deletePerson(Person person) async {
+    Database db = await instance.database;
+    await db.delete(
+      Person.table,
+      where: '${Person.columnId} = ?',
+      whereArgs: [person.id],
+    );
+  }
+
   Future<List<Transiction>> getTransictions(Wallet wallet) async {
     Database db = await instance.database;
     const sql = '''
@@ -163,8 +187,33 @@ class WalletsDatabase {
         AND ${Person.table}.${Person.columnWalletId} = ?
         ORDER BY ${Transiction.table}.${Transiction.columnDate} DESC''';
     final transictions = await db.rawQuery(sql, [wallet.id]);
-    return List.generate(
-        transictions.length, (index) => Transiction.fromMap(transictions[index]));
+    return List.generate(transictions.length,
+        (index) => Transiction.fromMap(transictions[index]));
+  }
+
+  Future<Transiction> getTransiction(int transictionId) async {
+    Database db = await instance.database;
+    final transictions = await db.query(Transiction.table,
+        where: '${Transiction.columnId} = ?', whereArgs: [transictionId]);
+    return Transiction.fromMap(transictions.first);
+  }
+
+  Future<void> insertTransiction(Transiction transiction) async {
+    Database db = await instance.database;
+    await db.insert(
+      Transiction.table,
+      transiction.toMap(),
+    );
+  }
+
+  Future<void> updateTransiction(Transiction transiction) async {
+    Database db = await instance.database;
+    await db.update(
+      Transiction.table,
+      transiction.toMap(),
+      where: '${Transiction.columnId} = ?',
+      whereArgs: [transiction.id],
+    );
   }
 
   Future<List<Debt>> getDebts(Wallet wallet) async {
@@ -175,6 +224,17 @@ class WalletsDatabase {
         WHERE ${Person.table}.${Person.columnId} = ${Debt.table}.${Debt.columnPersonId}
         AND ${Person.table}.${Person.columnWalletId} = ? ''';
     final debts = await db.rawQuery(sql, [wallet.id]);
+    return List.generate(debts.length, (index) => Debt.fromMap(debts[index]));
+  }
+
+  Future<List<Debt>> getDebtsOfTransiction(Transiction transiction) async {
+    Database db = await instance.database;
+    const sql = '''
+        SELECT ${Debt.table}.* 
+        FROM ${Debt.table} , ${Person.table} 
+        WHERE ${Person.table}.${Person.columnId} = ${Debt.table}.${Debt.columnPersonId}
+        AND ${Debt.table}.${Debt.columnTransictionId} = ? ''';
+    final debts = await db.rawQuery(sql, [transiction.id]);
     return List.generate(debts.length, (index) => Debt.fromMap(debts[index]));
   }
 }

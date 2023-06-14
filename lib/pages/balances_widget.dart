@@ -47,7 +47,13 @@ class BalancesWidgetState extends State<BalancesWidget> {
             children: [
               Text(people[balances.keys.elementAt(index)]!.name),
               const Spacer(),
-              Text('€ ${balances.values.elementAt(index)}'),
+              
+              if (balances.values.elementAt(index) >= 0)
+                Text('€ +${balances.values.elementAt(index).toStringAsFixed(2)}',
+                    style: const TextStyle(color: Colors.green))
+              else
+                Text('€ ${balances.values.elementAt(index).toStringAsFixed(2)}',
+                    style: const TextStyle(color: Colors.red)),
             ],
           ),
           titleTextStyle: const TextStyle(color: Colors.blue),

@@ -30,7 +30,13 @@ class TransictionPageState extends State<TransictionPage> {
     refreshTransiction();
   }
 
-  Future<void> refreshTransiction() async {}
+  Future<void> refreshTransiction() async {
+    final transiction =
+        await WalletsDatabase.instance.getTransiction(widget.transiction!.id!);
+    setState(() {
+      widget.transiction = transiction;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +68,14 @@ class TransictionPageState extends State<TransictionPage> {
               children: [
                 IconButton(
                     icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => AddEditTransictionPage(
                                   transiction: widget.transiction,
                                   people: widget.people)));
+                      refreshTransiction();
                     })
               ],
             )

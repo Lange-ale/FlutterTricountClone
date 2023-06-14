@@ -19,6 +19,18 @@ class Person {
         name = map[columnName],
         walletId = map[columnWalletId];
 
+  Person copyWith({
+    int? id,
+    String? name,
+    int? walletId,
+  }) {
+    return Person(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      walletId: walletId ?? this.walletId,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     var toReturn = {
       columnName: name,

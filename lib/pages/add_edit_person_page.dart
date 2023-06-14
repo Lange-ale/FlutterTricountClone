@@ -1,58 +1,60 @@
 import 'package:flutter/material.dart';
 
 import 'package:tricount/db/wallets_database.dart';
+import 'package:tricount/model/person.dart';
 import 'package:tricount/model/wallet.dart';
 
-class AddEditWalletPage extends StatefulWidget {
-  final Wallet? wallet;
+class AddEditPersonPage extends StatefulWidget {
+  final Person? person;
+  final Wallet wallet;
 
-  const AddEditWalletPage({
+  const AddEditPersonPage({
     Key? key,
-    this.wallet,
+    required this.person,
+    required this.wallet,
   }) : super(key: key);
 
   @override
-  AddEditWalletPageState createState() => AddEditWalletPageState();
+  AddEditPersonPageState createState() => AddEditPersonPageState();
 }
 
-class AddEditWalletPageState extends State<AddEditWalletPage> {
+class AddEditPersonPageState extends State<AddEditPersonPage> {
   final _formKey = GlobalKey<FormState>();
   late String _name;
 
   @override
   void initState() {
     super.initState();
-    _name = widget.wallet?.name ?? '';
+    _name = widget.person?.name ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.wallet == null ? 'New wallet' : 'Edit wallet'),
+        title: Text(widget.person == null ? 'New person' : 'Edit person'),
         actions: [
-          if (widget.wallet != null)
+          if (widget.person != null)
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                WalletsDatabase.instance.deleteWallet(widget.wallet!);
+                WalletsDatabase.instance.deletePerson(widget.person!);
                 Navigator.of(context).pop();
               },
             )
         ],
       ),
       body: Form(
-        // button with save icon
         key: _formKey,
         child: TextFormField(
           initialValue: _name,
           decoration: const InputDecoration(
             labelText: 'Name',
-            hintText: 'Enter wallet name',
+            hintText: 'Enter person name',
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Please enter wallet name';
+              return 'Please enter person name';
             }
             return null;
           },
@@ -63,13 +65,16 @@ class AddEditWalletPageState extends State<AddEditWalletPage> {
         onPressed: () {
           final form = _formKey.currentState!;
           if (form.validate()) {
-            if (widget.wallet == null) {
-              WalletsDatabase.instance.insertWallet(Wallet(
-                name: _name,
-              ));
+            if (widget.person == null) {
+              WalletsDatabase.instance.insertPerson(
+                Person(
+                  name: _name,
+                  walletId: widget.wallet.id!,
+                ),
+              );
             } else {
-              WalletsDatabase.instance.updateWallet(
-                widget.wallet!.copyWith(name: _name),
+              WalletsDatabase.instance.updatePerson(
+                widget.person!.copyWith(name: _name),
               );
             }
             Navigator.of(context).pop();

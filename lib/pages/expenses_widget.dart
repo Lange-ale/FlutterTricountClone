@@ -85,7 +85,7 @@ class ExpensesWidgetState extends State<ExpensesWidget> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          Navigator.of(context).push(
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AddEditTransictionPage(
                 people: people,
@@ -93,6 +93,7 @@ class ExpensesWidgetState extends State<ExpensesWidget> {
               ),
             ),
           );
+          refreshTransictions();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -103,7 +104,7 @@ class ExpensesWidgetState extends State<ExpensesWidget> {
           children: [
             const Spacer(),
             Text(
-              'Total: € ${100}    ',
+              'Total: € TODO    ',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

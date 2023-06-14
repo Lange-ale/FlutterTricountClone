@@ -5,11 +5,11 @@ import 'package:tricount/pages/add_edit_wallet_page.dart';
 import 'package:tricount/pages/wallet_page.dart';
 import 'package:tricount/model/person.dart';
 
-import '../model/wallet.dart';
-import 'expenses_widget.dart';
+import 'package:tricount/model/wallet.dart';
+import 'package:tricount/pages/add_edit_person_page.dart';
+import 'package:tricount/pages/add_edit_wallet_page.dart';
 
 class PeoplePage extends StatefulWidget {
-
   final Wallet wallet;
 
   const PeoplePage({Key? key, required this.wallet}) : super(key: key);
@@ -46,7 +46,10 @@ class PeoplePageState extends State<PeoplePage> {
             title: Text(person.name),
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ExpensesWidget(wallet: widget.wallet)));
+                  builder: (context) => AddEditPersonPage(
+                        person: person,
+                        wallet: widget.wallet,
+                      )));
               refreshPeople();
             },
           );
@@ -56,7 +59,11 @@ class PeoplePageState extends State<PeoplePage> {
         child: const Icon(Icons.add),
         onPressed: () async {
           await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const AddEditWalletPage()),
+            MaterialPageRoute(
+                builder: (context) => AddEditPersonPage(
+                      person: null,
+                      wallet: widget.wallet,
+                    )),
           );
           refreshPeople();
         },

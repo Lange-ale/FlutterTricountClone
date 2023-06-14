@@ -6,9 +6,9 @@ class Debt {
   static const String columnAmount = 'amount';
 
   final int? id;
-  final int transictionId;
+  final int? transictionId;
   final int personId;
-  final double amount;
+  double amount;
 
   Debt({
     this.id,
@@ -22,6 +22,20 @@ class Debt {
         transictionId = map[columnTransictionId],
         personId = map[columnPersonId],
         amount = map[columnAmount];
+
+  Debt copyWith({
+    int? id,
+    int? transictionId,
+    int? personId,
+    double? amount,
+  }) {
+    return Debt(
+      id: id ?? this.id,
+      transictionId: transictionId ?? this.transictionId,
+      personId: personId ?? this.personId,
+      amount: amount ?? this.amount,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     var toReturn = {

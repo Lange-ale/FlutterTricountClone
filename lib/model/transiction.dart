@@ -20,6 +20,13 @@ class Transiction {
     required this.description,
   });
 
+  Transiction.fromMap(Map<String, dynamic> map)
+      : id = map[columnId],
+        personId = map[columnPersonId],
+        totalAmount = map[columnTotalAmount],
+        date = DateTime.parse(map[columnDate]),
+        description = map[columnDescription];
+
   Transiction copyWith(
       {int? id,
       int? personId,
@@ -34,13 +41,6 @@ class Transiction {
       description: description ?? this.description,
     );
   }
-
-  Transiction.fromMap(Map<String, dynamic> map)
-      : id = map[columnId],
-        personId = map[columnPersonId],
-        totalAmount = map[columnTotalAmount],
-        date = DateTime.parse(map[columnDate]),
-        description = map[columnDescription];
 
   Map<String, dynamic> toMap() {
     var toReturn = {
